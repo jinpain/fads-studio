@@ -1,6 +1,4 @@
 run:
-	go run cmd/main.go
-
+	go run ./cmd/main.go
 swg:
-	cd ./cmd && \
-	swag init -o ../docs
+	swag init -g ./cmd/main.go -o docs

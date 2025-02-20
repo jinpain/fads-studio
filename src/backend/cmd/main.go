@@ -1,15 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinpain/fads-studio/internal/configuration"
+	"github.com/jinpain/fads-studio/internal/routes"
 
 	docs "github.com/jinpain/fads-studio/docs"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+//var config *configuration.Config
 
 // @title FADS Studio WebAPI
 // @version 1.0
@@ -18,10 +22,12 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
-	config, err := configuration.LoadConfig("configs/config.yaml")
+	err := configuration.LoadConfig("configs/config.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(configuration.Config)
 
 	r := gin.Default()
 
@@ -29,12 +35,12 @@ func main() {
 
 	v1 := r.Group("/api/v1")
 	{
-		v1.GET("")
+		routes.Database(v1.Group("/database"))
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	if err := r.Run(config.Server.Host + ":" + config.Server.Port); err != nil {
+	if err := r.Run(configuration.Config.Server.Host + ":" + configuration.Config.Server.Port); err != nil {
 		panic(err)
 	}
 }

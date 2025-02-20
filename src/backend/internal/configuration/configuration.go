@@ -6,27 +6,34 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
+type config struct {
 	Server struct {
 		Host string `yaml:"host"`
 		Port string `yaml:"port"`
-	}
+		Addr string `yaml:"addr"`
+	} `yaml:"server"`
+	DbServer struct {
+		Host     string `yaml:"host"`
+		Port     string `yaml:"port"`
+		Username string `yaml:"username"`
+		Password string `yaml:"password"`
+	} `yaml:"db-server"`
 }
 
-func LoadConfig(path string) (*Config, error) {
-	config := &Config{}
+var Config *config
 
+func LoadConfig(path string) error {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer file.Close()
 
 	d := yaml.NewDecoder(file)
 
-	if err := d.Decode(&config); err != nil {
-		return nil, err
+	if err := d.Decode(&Config); err != nil {
+		return err
 	}
 
-	return config, nil
+	return nil
 }

@@ -1,9 +1,58 @@
 basePath: /api/v1
+definitions:
+  handlers.Database:
+    properties:
+      name:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
   description: '...'
   title: FADS Studio WebAPI
   version: "1.0"
-paths: {}
+paths:
+  /database/:
+    post:
+      description: Create a new database with the given name
+      parameters:
+      - description: Database name
+        in: body
+        name: database
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.Database'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a database
+      tags:
+      - Database
+  /database/getall:
+    get:
+      description: Get all playbooks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.Database'
+            type: array
+      summary: Get all playbooks
+      tags:
+      - Database
 swagger: "2.0"
